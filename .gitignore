@@ -1,0 +1,11 @@
+# dados (baixados do portal do Ministério da Saúde — ver README)
+dados/
+*.parquet
+*.xlsx
+*.xls
+*.csv
+
+# saídas de execução
+.ipynb_checkpoints/
+__pycache__/
+*.log
