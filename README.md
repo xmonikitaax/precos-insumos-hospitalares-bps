@@ -1,4 +1,6 @@
-# Análise Longitudinal de Preços em Insumos Hospitalares Públicos
+# Preços e concentração de mercado em compras públicas de insumos hospitalares, 2009–2023
+
+Repositório: https://github.com/xmonikitaax/precos-insumos-hospitalares-bps
 
 Rotinas de tratamento e análise dos dados do **Banco de Preços em Saúde (BPS)** do Ministério da Saúde, referentes ao período de **2009 a 2023**.
 
@@ -23,16 +25,16 @@ As quatro primeiras rotinas são sequenciais. As demais dependem delas, mas inde
 
 | # | Rotina | O que faz |
 |---|---|---|
-| 1 | `Inventario` | Diagnóstico dos arquivos originais: campos por ano, formato dos identificadores, cobertura de preenchimento |
-| 2 | `CONVERSAO_CSV` | Converte as planilhas originais em texto delimitado, sem alterar conteúdo |
-| 3 | `ETL_HARMONIZACAO` | Unifica nomenclatura, converte tipos, padroniza identificadores de item e fornecedor |
-| 4 | `ETL_IPCA` | Constrói os fatores de deflação mensais a partir do número-índice do IPCA |
-| 5 | `ETL_PRECO_REAL` | Série de preços nominais e reais, índice encadeado por item pareado, cenários de robustez |
-| 6 | `ETL_HHI` | Índice de concentração por item e ano, classificação e restrições por número de fornecedores |
-| 7 | `ETL_TERRITORIAL` | Recuperação da UF ausente por CNPJ (com validação) e índice de preço relativo por UF |
-| 8 | `ETL_ESCALA` | Quintis de quantidade, associação entre escala e preço, tabela UF × quintil |
-| 9 | `ETL_CORRELACAO` | Cinco desenhos de análise da relação entre concentração e preço |
-| 10 | `VALIDACAO_INDEPENDENTE` | Reconstrói os indicadores a partir dos arquivos originais, sem reutilizar nada do pipeline |
+| 1 | `01_INVENTARIO` | Diagnóstico dos arquivos originais: campos por ano, formato dos identificadores, cobertura de preenchimento |
+| 2 | `02_CONVERSAO_CSV` | Converte as planilhas originais em texto delimitado, sem alterar conteúdo |
+| 3 | `03_ETL_HARMONIZACAO` | Unifica nomenclatura, converte tipos, padroniza identificadores de item e fornecedor |
+| 4 | `04_ETL_IPCA` | Constrói os fatores de deflação mensais a partir do número-índice do IPCA |
+| 5 | `05_ETL_PRECO_REAL` | Série de preços nominais e reais, índice encadeado por item pareado, cenários de robustez |
+| 6 | `06_ETL_HHI` | Índice de concentração por item e ano, classificação e restrições por número de fornecedores |
+| 7 | `07_ETL_TERRITORIAL` | Recuperação da UF ausente por CNPJ (com validação) e índice de preço relativo por UF |
+| 8 | `08_ETL_ESCALA` | Quintis de quantidade, associação entre escala e preço, tabela UF × quintil |
+| 9 | `09_ETL_CORRELACAO` | Cinco desenhos de análise da relação entre concentração e preço |
+| 10 | `10_VALIDACAO_INDEPENDENTE` | Reconstrói os indicadores a partir dos arquivos originais, sem reutilizar nada do pipeline |
 
 ---
 
