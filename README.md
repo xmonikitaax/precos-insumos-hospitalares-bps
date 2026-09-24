@@ -1,4 +1,4 @@
-# Preços e concentração de mercado em compras públicas de insumos hospitalares, 2009–2023
+# Preços e concentração de fornecedores em compras públicas de insumos hospitalares, 2009–2023
 
 Repositório: https://github.com/xmonikitaax/precos-insumos-hospitalares-bps
 
@@ -49,7 +49,7 @@ baixados do portal do Ministério da Saúde (ver seção *Fonte dos dados*).
    `dados/`; para usar outro local, ajuste a variável ou defina `BPS_DADOS` no ambiente.
 3. Execute os notebooks na ordem numérica.
 
-Dependências: `polars`, `pandas`, `pyarrow`, `scipy`, `openpyxl`, `xlrd`.
+Dependências: `polars==1.35.2`, `pandas`, `pyarrow`, `scipy`, `openpyxl`, `xlrd`.
 
 ---
 
