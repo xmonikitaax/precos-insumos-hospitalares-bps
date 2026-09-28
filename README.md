@@ -21,20 +21,35 @@ Série deflacionada pelo **IPCA** (IBGE, Tabela 1737 do SIDRA), base **dezembro 
 
 ## Ordem de execução
 
-As quatro primeiras rotinas são sequenciais. As demais dependem delas, mas independem entre si.
+As rotinas 01 a 04 e a 03B são sequenciais. As demais dependem delas; a 09 usa o resultado da 06.
 
 | # | Rotina | O que faz |
 |---|---|---|
 | 1 | `01_INVENTARIO` | Diagnóstico dos arquivos originais: campos por ano, formato dos identificadores, cobertura de preenchimento |
 | 2 | `02_CONVERSAO_CSV` | Converte as planilhas originais em texto delimitado, sem alterar conteúdo |
 | 3 | `03_ETL_HARMONIZACAO` | Unifica nomenclatura, converte tipos, padroniza identificadores de item e fornecedor |
+| 3B | `03B_CLASSIFICACAO_COMPRADOR` | Separa as compras de instituições privadas e estrangeiras e grava a base de compras públicas |
 | 4 | `04_ETL_IPCA` | Constrói os fatores de deflação mensais a partir do número-índice do IPCA |
-| 5 | `05_ETL_PRECO_REAL` | Série de preços nominais e reais, índice encadeado por item pareado, cenários de robustez |
+| 5 | `05_ETL_PRECO_REAL` | Série de preços nominais e reais, índice encadeado por item pareado, cenários de robustez e teste de composição dos compradores |
 | 6 | `06_ETL_HHI` | Índice de concentração por item e ano, classificação e restrições por número de fornecedores |
 | 7 | `07_ETL_TERRITORIAL` | Recuperação da UF ausente por CNPJ (com validação) e índice de preço relativo por UF |
 | 8 | `08_ETL_ESCALA` | Quintis de quantidade, associação entre escala e preço, tabela UF × quintil |
 | 9 | `09_ETL_CORRELACAO` | Cinco desenhos de análise da relação entre concentração e preço |
 | 10 | `10_VALIDACAO_INDEPENDENTE` | Reconstrói os indicadores a partir dos arquivos originais, sem reutilizar nada do pipeline |
+
+---
+
+## Recorte: somente compras públicas
+
+O BPS admite o registro voluntário de compras por instituições públicas e privadas (Ministério da Saúde, 2016).
+A rotina `03B` exclui os registros de instituições classificadas pela própria fonte como privadas — pelo campo
+esfera, presente nos arquivos de 2009 a 2016, e pelo CNPJ dessas instituições nos anos seguintes — e os de uma
+instituição estrangeira. Foram excluídos 32.546 registros (3,7%), menos de 0,1% do valor transacionado.
+Um consórcio de gestores públicos de saúde, classificado pela fonte ora como privado, ora como estadual,
+foi mantido entre as compras públicas.
+
+As rotinas 05 a 09 têm a chave `SOMENTE_PUBLICO` (padrão `True`): leem `Base Harmonizacao Publica` e gravam os
+resultados em pastas com o sufixo ` - Publico`. Com `False`, reproduzem a versão anterior, sobre a base completa.
 
 ---
 
@@ -49,7 +64,7 @@ baixados do portal do Ministério da Saúde (ver seção *Fonte dos dados*).
    `dados/`; para usar outro local, ajuste a variável ou defina `BPS_DADOS` no ambiente.
 3. Execute os notebooks na ordem numérica.
 
-Dependências: `polars==1.35.2`, `pandas`, `pyarrow`, `scipy`, `openpyxl`, `xlrd`.
+Dependências: `polars==1.35.2`, `pandas==2.2.2`, `pyarrow`, `scipy`, `openpyxl`, `xlrd`.
 
 ---
 
@@ -79,9 +94,9 @@ Três falhas de conversão foram identificadas durante o tratamento. Nenhuma ger
 
 - Conservação de linhas e de soma de valores entre arquivos originais e base tratada, ano a ano
 - Coerência interna entre preço unitário, quantidade e valor total
-- Comparação da mesma referência anual obtida em dois canais oficiais distintos
 - Análise de sensibilidade à defasagem entre data da compra e data de inserção do registro
-- Reconstrução integral dos indicadores por procedimento independente
+- Reconstrução integral dos indicadores por procedimento independente, inclusive da exclusão de compradores privados
+- Teste de composição dos compradores: índice de preço recalculado só com compradores municipais e só para 2015–2023
 
 ---
 
