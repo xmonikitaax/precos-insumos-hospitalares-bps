@@ -64,7 +64,7 @@ baixados do portal do Ministério da Saúde (ver seção *Fonte dos dados*).
    `dados/`; para usar outro local, ajuste a variável ou defina `BPS_DADOS` no ambiente.
 3. Execute os notebooks na ordem numérica.
 
-Dependências: `polars==1.35.2`, `pandas==2.2.2`, `pyarrow`, `scipy`, `openpyxl`, `xlrd`.
+Dependências: `polars==1.35.2`, `pandas==2.2.3`, `pyarrow`, `scipy`, `openpyxl`, `xlrd`.
 
 ---
 
