@@ -54,6 +54,8 @@ Todo número do painel responde a uma de duas perguntas:
 | 10 compras válidas no item-ano | P10 e P90 do preço | com menos, "10% das compras" é menos de uma compra |
 | 500 compras no estado, e item comprado em 5 estados | comparação de preço entre estados | estados com poucas compras dão índice instável |
 
+**Casas decimais:** nenhuma coluna que o painel lê é arredondada para menos de 6 casas: as que eram gravadas com 1 a 3 casas passaram a 6, como o HHI, e as demais não são arredondadas. O arredondamento para 1 a 3 casas é feito só na hora de mostrar, no painel e no texto (D88).
+
 As decisões citadas no código como D1, D2… estão descritas no Registro de decisões do trabalho.
 
 ---
@@ -81,8 +83,8 @@ As decisões citadas no código como D1, D2… estão descritas no Registro de d
 
 Por que essa ordem:
 - a 03B usa o resultado da 03C, e a 03D usa a base pública da 03B;
-- a 04B lê tudo o que vem antes, e as rotinas 05 a 09 e 12 só leem a 04B, sem recalcular nenhuma regra;
-- a 12 copia os resultados das rotinas 05 a 08, e a seção 12B usa os pares da 09;
+- a 04B lê tudo o que vem antes; as rotinas 05 a 09 partem da 04B, sem recalcular nenhuma regra (a 09 usa também o HHI da 06, e a 08 confere os seus estados com os da 07); a 12 parte da 04B e usa a natureza jurídica da 03C;
+- a 12 copia os resultados das rotinas 05 a 08, confere com a 05 e a 06, e a seção 12B usa os pares da 09;
 - a 10 e a 11 conferem as saídas anteriores.
 
 ---
