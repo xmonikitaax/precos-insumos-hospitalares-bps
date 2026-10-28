@@ -4,7 +4,7 @@ Repositório: https://github.com/xmonikitaax/precos-insumos-hospitalares-bps
 
 Rotinas de tratamento e análise dos dados do **Banco de Preços em Saúde (BPS)** do Ministério da Saúde, de **2009 a 2023**. É o repositório de apoio ao Trabalho de Conclusão de Curso do MBA em Data Science e Analytics para Operações, Escola Politécnica da Universidade de São Paulo (POLI USP PRO).
 
-**Painel do trabalho (Power BI):** [link do painel publicado]
+**Painel do trabalho (Power BI):** [abrir o painel publicado](https://app.powerbi.com/view?r=eyJrIjoiODVjNTVjZDMtNjQ2My00NjJiLWJhZDctODIxNzM5MmI3Mzk2IiwidCI6ImZiOTYwY2JmLTVjOTAtNGViMi1hN2VmLWNhMzg5NzBkNjI5MCJ9)
 
 ---
 
