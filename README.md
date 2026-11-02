@@ -109,7 +109,7 @@ As rotinas foram executadas no **Google Colab**, com os dados no Google Drive.
 
 1. Cada rotina começa com o bloco `PASTA_DADOS`. Ele aponta para a pasta do Drive usada no trabalho. Para usar outra pasta, defina a variável de ambiente `BPS_DADOS`.
 2. Dentro dessa pasta, as rotinas leem e gravam estas subpastas:
-   - **entradas:** `Base Tratamento Minimo` (os 15 arquivos anuais do BPS como foram baixados, só sem a linha de aviso acima dos nomes das colunas, retirada à mão; nenhum dado foi alterado), `IPCA Bruto/tabela1737.csv`, `Base Receita Federal` (subpastas `CNPJ`, `Natureza`, `Estabelecimento` e `Municipio`) e `Comparacao Fontes` (só para a seção 17 da rotina 11);
+   - **entradas:** `Base Tratamento Minimo` (os 15 arquivos anuais do BPS como foram baixados; em alguns deles, como os de 2009, 2012 e 2023, uma linha de aviso acima dos nomes das colunas foi retirada à mão, sem alterar nenhum dado), `IPCA Bruto/tabela1737.csv`, `Base Receita Federal` (subpastas `CNPJ`, `Natureza`, `Estabelecimento` e `Municipio`) e `Comparacao Fontes` (só para a seção 17 da rotina 11);
    - **saídas:** as demais pastas, criadas pelas próprias rotinas (`Base Conversao CSV`, `Base Harmonizacao Campos`, `Base Harmonizacao Publica`, `Base Classificacao Receita`, `Base Classificacao CATMAT`, `IPCA Tratado`, `Base Analitica`, as pastas `… - Publico`, `Base Painel` e `Auditoria`).
 3. Execute na ordem da tabela acima.
 4. Cada rotina instala as versões que usa na primeira célula (`polars==1.35.2`, `pandas==2.2.3`, `pyarrow`, `scipy`, `xlrd`, `openpyxl`, `requests`, `python-calamine==0.8.3`).
