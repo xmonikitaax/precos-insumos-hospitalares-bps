@@ -15,11 +15,11 @@ O trabalho mede, nas compras públicas de insumos hospitalares registradas no BP
 - quão **concentrado** é o fornecimento de cada item;
 - como o preço varia com o **estado**, a **modalidade de compra** e o **tamanho da compra**.
 
-Os resultados estão num **painel em Power BI**, com três páginas, que é a base do texto do trabalho. Todo número do texto e todas as tabelas que o painel lê saem destas 16 rotinas. Executadas em ordem, a partir dos arquivos originais, elas refazem tudo.
+Os resultados estão num **painel em Power BI**, com três páginas, que é a base do texto do trabalho. Todo número do texto e todas as tabelas que o painel lê saem destas 16 rotinas. Executadas em ordem, a partir dos arquivos baixados das fontes, elas refazem tudo.
 
 ---
 
-## Do arquivo original à base do painel
+## Do arquivo baixado à base do painel
 
 | Etapa | Compras | Rotina |
 |---|---|---|
@@ -64,7 +64,7 @@ As decisões citadas no código como D1, D2… estão descritas no Registro de d
 
 | # | Rotina | O que faz | Etapa |
 |---|---|---|---|
-| 1 | `01_INVENTARIO` | Descreve a estrutura dos arquivos originais: campos de cada ano, formato dos códigos e preenchimento | Extração |
+| 1 | `01_INVENTARIO` | Descreve a estrutura dos arquivos baixados: campos de cada ano, formato dos códigos e preenchimento | Extração |
 | 2 | `02_CONVERSAO_CSV` | Converte cada arquivo anual do BPS de Excel para texto, sem nenhum tratamento | Extração |
 | 3 | `03_ETL_HARMONIZACAO` | Unifica nomes e tipos dos campos, padroniza os códigos de item e fornecedor, corrige a leitura da fonte (datas, separador decimal, valor total, colunas trocadas), retira as cópias exatas e agrupa as modalidades | Processamento |
 | 4 | `03C_CLASSIFICACAO_RECEITA` | Busca a natureza jurídica de cada comprador no cadastro do CNPJ da Receita Federal (dezembro de 2023). Não altera a base | Processamento |
@@ -78,7 +78,7 @@ As decisões citadas no código como D1, D2… estão descritas no Registro de d
 | 12 | `08_ETL_ESCALA` | Preço de cada compra em relação à mediana do item no ano, por faixa de quantidade | Análise |
 | 13 | `09_ETL_CORRELACAO` | Relação entre a mudança da concentração e a mudança do preço do mesmo item, em anos seguidos | Análise |
 | 14 | `12_INDICADORES_PAINEL` | Gera, a partir da mesma base, todas as tabelas que o painel lê, inclusive a seção 12B (Concentração e preço) | Análise e painel |
-| 15 | `10_VALIDACAO_INDEPENDENTE` | Refaz os principais números a partir dos arquivos originais, com código próprio e as mesmas regras, e compara com os resultados das demais rotinas | Verificação |
+| 15 | `10_VALIDACAO_INDEPENDENTE` | Refaz os principais números a partir dos arquivos baixados, com código próprio e as mesmas regras, e compara com os resultados das demais rotinas | Verificação |
 | 16 | `11_AUDITORIA` | Guarda, para cada decisão de tratamento, o teste que a sustenta, com uma tabela em CSV na pasta `Auditoria` | Verificação |
 
 Por que essa ordem:
@@ -109,7 +109,7 @@ As rotinas foram executadas no **Google Colab**, com os dados no Google Drive.
 
 1. Cada rotina começa com o bloco `PASTA_DADOS`. Ele aponta para a pasta do Drive usada no trabalho. Para usar outra pasta, defina a variável de ambiente `BPS_DADOS`.
 2. Dentro dessa pasta, as rotinas leem e gravam estas subpastas:
-   - **entradas:** `Base Tratamento Minimo` (arquivos originais do BPS), `IPCA Bruto/tabela1737.csv`, `Base Receita Federal` (subpastas `CNPJ`, `Natureza`, `Estabelecimento` e `Municipio`) e `Comparacao Fontes` (só para a seção 17 da rotina 11);
+   - **entradas:** `Base Tratamento Minimo` (os 15 arquivos anuais do BPS como foram baixados, só sem a linha de aviso acima dos nomes das colunas, retirada à mão; nenhum dado foi alterado), `IPCA Bruto/tabela1737.csv`, `Base Receita Federal` (subpastas `CNPJ`, `Natureza`, `Estabelecimento` e `Municipio`) e `Comparacao Fontes` (só para a seção 17 da rotina 11);
    - **saídas:** as demais pastas, criadas pelas próprias rotinas (`Base Conversao CSV`, `Base Harmonizacao Campos`, `Base Harmonizacao Publica`, `Base Classificacao Receita`, `Base Classificacao CATMAT`, `IPCA Tratado`, `Base Analitica`, as pastas `… - Publico`, `Base Painel` e `Auditoria`).
 3. Execute na ordem da tabela acima.
 4. Cada rotina instala as versões que usa na primeira célula (`polars==1.35.2`, `pandas==2.2.3`, `pyarrow`, `scipy`, `xlrd`, `openpyxl`, `requests`, `python-calamine==0.8.3`).
@@ -126,7 +126,7 @@ A pasta `Base Painel` é a que o painel em Power BI lê.
   - a decomposição dos elos do índice;
   - o teste dos compradores municipais com o mínimo de 3 compras;
   - a comparação das duas fontes do BPS.
-- **Validação independente (rotina 10):** refaz a base a partir dos arquivos originais do BPS, da Receita Federal, do SIDRA e do catálogo, com código próprio em pandas. Os 17 indicadores comparados são iguais aos do pipeline, entre eles 833.928 compras, 31.268 implausíveis, as parcelas de item-ano concentrados e o índice de preço de 2023 (86,9 com o mínimo de 3 compras; 77,1 sem ele).
+- **Validação independente (rotina 10):** refaz a base a partir dos arquivos baixados do BPS, da Receita Federal, do SIDRA e do catálogo, com código próprio em pandas. Os 17 indicadores comparados são iguais aos do pipeline, entre eles 833.928 compras, 31.268 implausíveis, as parcelas de item-ano concentrados e o índice de preço de 2023 (86,9 com o mínimo de 3 compras; 77,1 sem ele).
 - **Rotina 12:**
   - a seção 11 confere as tabelas do painel contra as rotinas de origem;
   - a seção 12B só grava depois de três testes: pares iguais aos da rotina 09, medianas iguais e os demais arquivos da `Base Painel` inalterados.
