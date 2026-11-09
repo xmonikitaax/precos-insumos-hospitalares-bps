@@ -23,11 +23,12 @@ Os resultados estão num **painel em Power BI**, com três páginas, que é a ba
 
 | Etapa | Compras | Rotina |
 |---|---|---|
+| Arquivos anuais do BPS de 2000 a 2023: entram os de 2009 a 2023, os únicos com o código CATMAT do item e o CNPJ do fornecedor | — | 01 |
 | Linhas nos arquivos anuais do BPS, 2009–2023 | 883.655 | 01, 02 |
 | Menos as cópias exatas (linhas idênticas em todas as colunas) | 872.804 | 03 |
 | Só compradores públicos, pela natureza jurídica do CNPJ (saem 665 sem CNPJ e 36.043 de natureza privada) | 836.096 | 03C, 03B |
-| Só as 16 classes de produtos de saúde do Ministério da Saúde (saem 2.167 compras de 144 códigos, e 1 compra sem preço ou código) | **833.928** | 03D, 04B |
-| Compras válidas para preço (saem 31.268 com preço ou quantidade implausível) | **802.660** | 04B |
+| Só as 16 classes de produtos de saúde do Ministério da Saúde (saem 2.167 compras de 144 códigos) | **833.929** | 03D, 04B |
+| Compras válidas para preço (saem 31.269 com preço ou quantidade implausível, entre elas 1 com preço igual a zero) | **802.660** | 04B |
 | Compras válidas em item-ano com 3 compras válidas ou mais | **747.684** | 04B |
 
 O item é o código CATMAT mais a unidade de fornecimento: são 19.979 itens.
@@ -64,7 +65,7 @@ As decisões citadas no código como D1, D2… estão descritas no Registro de d
 
 | # | Rotina | O que faz | Etapa |
 |---|---|---|---|
-| 1 | `01_INVENTARIO` | Descreve a estrutura dos arquivos baixados: campos de cada ano, formato dos códigos e preenchimento | Extração |
+| 1 | `01_INVENTARIO` | Descreve a estrutura dos arquivos baixados (campos de cada ano, formato dos códigos e preenchimento) e decide quais anos entram no estudo: só os arquivos com o código CATMAT e o CNPJ do fornecedor | Extração |
 | 2 | `02_CONVERSAO_CSV` | Converte cada arquivo anual do BPS de Excel para texto, sem nenhum tratamento | Extração |
 | 3 | `03_ETL_HARMONIZACAO` | Unifica nomes e tipos dos campos, padroniza os códigos de item e fornecedor, corrige a leitura da fonte (datas, separador decimal, valor total, colunas trocadas), retira as cópias exatas e agrupa as modalidades | Processamento |
 | 4 | `03C_CLASSIFICACAO_RECEITA` | Busca a natureza jurídica de cada comprador no cadastro do CNPJ da Receita Federal (dezembro de 2023). Não altera a base | Processamento |
@@ -109,7 +110,7 @@ As rotinas foram executadas no **Google Colab**, com os dados no Google Drive.
 
 1. Cada rotina começa com o bloco `PASTA_DADOS`. Ele aponta para a pasta do Drive usada no trabalho. Para usar outra pasta, defina a variável de ambiente `BPS_DADOS`.
 2. Dentro dessa pasta, as rotinas leem e gravam estas subpastas:
-   - **entradas:** `Base Tratamento Minimo` (os 15 arquivos anuais do BPS como foram baixados; em alguns deles, como os de 2009, 2012 e 2023, uma linha de título acima dos nomes das colunas foi retirada à mão, sem alterar nenhum dado), `IPCA Bruto/tabela1737.csv`, `Base Receita Federal` (subpastas `CNPJ`, `Natureza`, `Estabelecimento` e `Municipio`) e `Comparacao Fontes` (só para a seção 17 da rotina 11);
+   - **entradas:** `Base Tratamento Minimo` (os arquivos anuais do BPS de 2000 a 2023 como foram baixados, dos quais a rotina 01 aprova os 15 de 2009 a 2023; em alguns deles, como os de 2009, 2012 e 2023, uma linha de título acima dos nomes das colunas foi retirada à mão, sem alterar nenhum dado), `IPCA Bruto/tabela1737.csv`, `Base Receita Federal` (subpastas `CNPJ`, `Natureza`, `Estabelecimento` e `Municipio`) e `Comparacao Fontes` (só para a seção 17 da rotina 11);
    - **saídas:** as demais pastas, criadas pelas próprias rotinas (`Base Conversao CSV`, `Base Harmonizacao Campos`, `Base Harmonizacao Publica`, `Base Classificacao Receita`, `Base Classificacao CATMAT`, `IPCA Tratado`, `Base Analitica`, as pastas `… - Publico`, `Base Painel` e `Auditoria`).
 3. Execute na ordem da tabela acima.
 4. Cada rotina instala as versões que usa na primeira célula (`polars==1.35.2`, `pandas==2.2.3`, `pyarrow`, `scipy`, `xlrd`, `openpyxl`, `requests`, `python-calamine==0.8.3`).
@@ -126,7 +127,7 @@ A pasta `Base Painel` é a que o painel em Power BI lê.
   - a decomposição dos elos do índice;
   - o teste dos compradores municipais com o mínimo de 3 compras;
   - a comparação das duas fontes do BPS.
-- **Validação independente (rotina 10):** refaz a base a partir dos arquivos baixados do BPS, da Receita Federal, do SIDRA e do catálogo, com código próprio em pandas. Os 17 indicadores comparados são iguais aos do pipeline, entre eles 833.928 compras, 31.268 implausíveis, as parcelas de item-ano concentrados e o índice de preço de 2023 (86,9 com o mínimo de 3 compras; 77,1 sem ele).
+- **Validação independente (rotina 10):** refaz a base a partir dos arquivos baixados do BPS, da Receita Federal, do SIDRA e do catálogo, com código próprio em pandas. Os 17 indicadores comparados são iguais aos do pipeline, entre eles 833.929 compras, 31.269 implausíveis, as parcelas de item-ano concentrados e o índice de preço de 2023 (86,9 com o mínimo de 3 compras; 77,1 sem ele).
 - **Rotina 12:**
   - a seção 11 confere as tabelas do painel contra as rotinas de origem;
   - a seção 12B só grava depois de três testes: pares iguais aos da rotina 09, medianas iguais e os demais arquivos da `Base Painel` inalterados.
